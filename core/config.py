@@ -21,6 +21,9 @@ class FunnelConfig:
     # Google Drive
     gdrive_folder_id: str       # ID корневой папки (AUTOVideo / AUTOStatic)
 
+    # Pinterest доска (обязательна для создания пина)
+    board_id: str                 # ID доски, на которую загружаются пины
+
     # Тексты объявления
     campaign_name_template: str  # без даты; дата добавляется автоматически _DDMMYY
     ad_title: str

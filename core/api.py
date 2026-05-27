@@ -191,6 +191,7 @@ def _upload_video_pin(
 
     # Шаг 4: Создание Pin
     pin_payload = {
+        "board_id": cfg.board_id,
         "media_source": {
             "source_type": "video_id",
             "media_id": media_id,
@@ -232,6 +233,7 @@ def _upload_image_pin(
         img_b64 = base64.b64encode(f.read()).decode("utf-8")
 
     pin_payload = {
+        "board_id": cfg.board_id,
         "media_source": {
             "source_type": "image_base64",
             "content_type": mime or "image/jpeg",

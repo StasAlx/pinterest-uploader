@@ -5,6 +5,9 @@ name: mimika_v21
 ad_account_id: "549765419738"
 order_line_id: "2817498668541"   # Получить в Pinterest Ads Manager
 
+# Доска для пинов (Пины только для рекламы — PROTECTED)
+board_id: "993114224018984197"
+
 # Google Drive: корневая папка с подпапками CRTV-xxx / CRTS-xxx
 gdrive_folder_id: "1tLAgUv0DTJV-qACkU7GTYD9Sxwql48aL"
 
