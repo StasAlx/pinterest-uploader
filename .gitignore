@@ -1,0 +1,18 @@
+# Credentials
+.env
+client_secrets.json
+gdrive_credentials.json
+pinterest_token.json
+
+# State (не коммитим — локальные данные о загруженных файлах)
+state/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Temp
+*.log

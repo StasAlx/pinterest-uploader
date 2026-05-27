@@ -1,0 +1,24 @@
+# Воронка Mimika V21 — Pinterest
+name: mimika_v21
+
+# Pinterest рекламный аккаунт
+ad_account_id: "549765419738"
+order_line_id: "your_order_line_id_here"   # Получить в Pinterest Ads Manager
+
+# Google Drive: корневая папка с подпапками CRTV-xxx / CRTS-xxx
+gdrive_folder_id: "your_gdrive_folder_id_here"
+
+# Шаблон названия кампании (дата _DDMMYY добавляется автоматически)
+campaign_name_template: "PIN_Mimika_V21"
+
+# Тексты объявления
+ad_title: "Your ad title here"
+ad_description: "Your ad description here"
+ad_url: "https://your-landing-page.com/"
+
+# Параметры кампании
+budget_eur: 250     # Дневной бюджет в евро (CBO, на уровне кампании)
+batch_size: 10      # Файлов за один прогон
+
+# Ожидание транскодирования видео (секунды)
+max_video_wait_sec: 300
