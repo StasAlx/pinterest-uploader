@@ -3,22 +3,35 @@ name: mimika_v21
 
 # Pinterest рекламный аккаунт
 ad_account_id: "549765419738"
-order_line_id: "your_order_line_id_here"   # Получить в Pinterest Ads Manager
+order_line_id: "2817498668541"   # Получить в Pinterest Ads Manager
 
 # Google Drive: корневая папка с подпапками CRTV-xxx / CRTS-xxx
-gdrive_folder_id: "your_gdrive_folder_id_here"
+gdrive_folder_id: "1tLAgUv0DTJV-qACkU7GTYD9Sxwql48aL"
 
 # Шаблон названия кампании (дата _DDMMYY добавляется автоматически)
-campaign_name_template: "PIN_Mimika_V21"
+campaign_name_template: "WEB_pin_as_yoga_WW_cbo_purch_7c_o-lc_V21Bundle_lprice"
 
 # Тексты объявления
-ad_title: "Your ad title here"
-ad_description: "Your ad description here"
-ad_url: "https://your-landing-page.com/"
+ad_title: "Facial Rejuvenation"
+ad_description: "Unhappy with your face? No problem! Our Face Yoga exercises are your secret weapon to turn back the clock naturally, unveiling tighter, firmer skin. Say goodbye to expensive treatments, welcome the ease and effectiveness of Face Yoga into your life. Discover the joy of self-care and self-love as you embark on this journey towards a more youthful, glowing you."
+ad_url: "https://quiz.mimika-app.com/quiz?reset=1&variant=variant21bundlePT_chp"
 
 # Параметры кампании
 budget_eur: 250     # Дневной бюджет в евро (CBO, на уровне кампании)
 batch_size: 10      # Файлов за один прогон
+
+# Таргетинг — гео (Tier1 English-speaking)
+countries:
+  - "US"
+  - "GB"
+  - "CA"
+  - "AU"
+  - "NZ"
+  - "IE"
+
+# Таргетинг — язык
+language:
+  - "en"
 
 # Ожидание транскодирования видео (секунды)
 max_video_wait_sec: 300

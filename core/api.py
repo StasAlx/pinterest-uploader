@@ -3,6 +3,7 @@ Pinterest Ads API v5: создание кампании, ad group, pin, ad.
 
 Ключевые исправления относительно старых скриптов:
 - targeting_spec: используем 'location' вместо 'GEO', 'age_bucket' вместо 'AGE_BUCKET'
+- targeting_spec: добавлен 'locale' для таргетинга по языку
 - убран is_performance_plus (не поддерживается API v5)
 - статус кампании и ad group: PAUSED (включается вручную)
 - ожидание транскодирования видео через GET /media/{media_id}
@@ -87,8 +88,14 @@ def create_campaign(access_token: str, cfg: FunnelConfig, name: str, start_time:
 def create_ad_group(access_token: str, cfg: FunnelConfig, campaign_id: str, name: str) -> str:
     """
     Создаёт Ad Group с оптимизацией на CHECKOUT.
-    ВАЖНО: 'location' вместо устаревшего 'GEO' в targeting_spec.
+    targeting_spec: 'location' (не 'GEO'), 'locale' для языка.
     """
+    targeting_spec: dict = {
+        "location": cfg.countries,
+    }
+    if cfg.language:
+        targeting_spec["locale"] = cfg.language
+
     payload = [{
         "ad_account_id": cfg.ad_account_id,
         "campaign_id": campaign_id,
@@ -101,9 +108,7 @@ def create_ad_group(access_token: str, cfg: FunnelConfig, campaign_id: str, name
                 "conversion_event": "CHECKOUT",
             }
         },
-        "targeting_spec": {
-            "location": cfg.countries,
-        },
+        "targeting_spec": targeting_spec,
     }]
     ag_id = _post(
         access_token,
@@ -149,6 +154,7 @@ def _upload_video_pin(
     access_token: str,
     cfg: FunnelConfig,
     local_path: Path,
+    ad_url: str,
 ) -> Tuple[str, str]:
     """Загружает видео на Pinterest и создаёт Pin. Возвращает (pin_id, creative_type)."""
     # Шаг 1: Инициализация загрузки
@@ -192,7 +198,7 @@ def _upload_video_pin(
         },
         "title": cfg.ad_title,
         "description": cfg.ad_description,
-        "link": cfg.ad_url,
+        "link": ad_url,
         "creative_type": "VIDEO",
     }
     for attempt in range(3):
@@ -218,6 +224,7 @@ def _upload_image_pin(
     access_token: str,
     cfg: FunnelConfig,
     local_path: Path,
+    ad_url: str,
 ) -> Tuple[str, str]:
     """Загружает изображение и создаёт Pin через base64. Возвращает (pin_id, creative_type)."""
     mime, _ = mimetypes.guess_type(str(local_path))
@@ -232,7 +239,7 @@ def _upload_image_pin(
         },
         "title": cfg.ad_title,
         "description": cfg.ad_description,
-        "link": cfg.ad_url,
+        "link": ad_url,
         "creative_type": "REGULAR",
     }
     r = requests.post(
@@ -308,18 +315,22 @@ def upload_and_create_ad(
     ad_group_id: str,
     local_path: Path,
     ad_name: str,
+    ad_url: Optional[str] = None,
 ) -> Tuple[str, str]:
     """
     Загружает файл как Pin и создаёт объявление.
+    ad_url: URL с UTM-метками (если None — берётся cfg.ad_url).
     Возвращает (pin_id, ad_id).
     """
+    url = ad_url or cfg.ad_url
     is_video = local_path.suffix.lower() in (".mp4", ".mov")
     if is_video:
-        pin_id, creative_type = _upload_video_pin(access_token, cfg, local_path)
+        pin_id, creative_type = _upload_video_pin(access_token, cfg, local_path, url)
     else:
-        pin_id, creative_type = _upload_image_pin(access_token, cfg, local_path)
+        pin_id, creative_type = _upload_image_pin(access_token, cfg, local_path, url)
 
     ad_id = _create_ad(
         access_token, cfg, campaign_id, ad_group_id, pin_id, creative_type, ad_name
     )
     return pin_id, ad_id
+

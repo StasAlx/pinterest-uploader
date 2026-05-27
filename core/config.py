@@ -25,19 +25,19 @@ class FunnelConfig:
     campaign_name_template: str  # без даты; дата добавляется автоматически _DDMMYY
     ad_title: str
     ad_description: str
-    ad_url: str                  # ссылка на сайт
+    ad_url: str                  # базовый URL лендинга (UTM добавляются автоматически)
 
     # Параметры кампании
     budget_eur: int = 250        # дневной бюджет в евро (на уровне кампании)
     batch_size: int = 10         # сколько креативов заливать за один прогон
 
-    # Таргетинг
+    # Таргетинг — гео (Tier1 по умолчанию)
     countries: List[str] = field(default_factory=lambda: [
-        "US", "AU", "AT", "BE", "BG", "CA", "HR", "CY", "DK", "CZ", "EE", "FI",
-        "FR", "DE", "GR", "HU", "IE", "IL", "IT", "LV", "JP", "GB", "CH", "SE",
-        "ES", "NL", "LU", "LT", "MT", "NZ", "NO", "KR", "SI", "RS", "SK", "PT",
-        "PL", "RO",
+        "US", "GB", "CA", "AU", "NZ", "IE",
     ])
+
+    # Таргетинг — язык
+    language: List[str] = field(default_factory=lambda: ["en"])
 
     # Ожидание транскодирования видео
     max_video_wait_sec: int = 300  # максимум секунд ожидания готовности видео
