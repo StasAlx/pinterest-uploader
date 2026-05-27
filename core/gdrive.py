@@ -61,17 +61,32 @@ def is_uploadable(title: str) -> bool:
     return fmt is None or fmt == "9x16"
 
 
+# Корневая папка проекта (pinterest-uploader/)
+_PROJECT_ROOT = Path(__file__).parent.parent
+
+
 # ── Google Drive init ─────────────────────────────────────────────────────────
 
 def init_gdrive(client_secrets_path: str = "client_secrets.json") -> GoogleDrive:
-    """Инициализирует Google Drive с OAuth2. При первом запуске откроется браузер."""
-    gauth = GoogleAuth()
-    gauth.settings["client_config_file"] = client_secrets_path
-    gauth.settings["save_credentials"] = True
-    gauth.settings["save_credentials_backend"] = "file"
-    gauth.settings["save_credentials_file"] = str(
-        Path(client_secrets_path).parent / "gdrive_credentials.json"
-    )
+    """
+    Инициализирует Google Drive с OAuth2. При первом запуске откроется браузер.
+    Токен сохраняется в gdrive_credentials.json и используется повторно.
+
+    Важно: settings передаются в конструктор GoogleAuth, а не через gauth.settings
+    после создания — иначе _storages не инициализируются корректно.
+    """
+    secrets_abs = str(Path(client_secrets_path).resolve())
+    creds_abs = str(_PROJECT_ROOT / "gdrive_credentials.json")
+
+    gauth = GoogleAuth(settings={
+        "client_config_backend": "file",
+        "client_config_file": secrets_abs,
+        "save_credentials": True,
+        "save_credentials_backend": "file",
+        "save_credentials_file": creds_abs,
+        "get_refresh_token": True,
+        "oauth_scope": ["https://www.googleapis.com/auth/drive"],
+    })
     gauth.LocalWebserverAuth()
     return GoogleDrive(gauth)
 
