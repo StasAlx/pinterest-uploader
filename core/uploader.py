@@ -17,7 +17,7 @@ import json
 import logging
 import shutil
 import tempfile
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Optional, Set
 from urllib.parse import urlencode
@@ -95,6 +95,15 @@ def _build_utm_url(base_url: str, campaign_name: str, creative_basename: str) ->
     })
     sep = "&" if "?" in base_url else "?"
     return f"{base_url}{sep}{utm}"
+
+
+# ── Время запуска ────────────────────────────────────────────────────────────
+
+def _next_midnight() -> int:
+    """Возвращает Unix timestamp ближайшей полуночи (локальное время)."""
+    now = datetime.now()
+    midnight = (now + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+    return int(midnight.timestamp())
 
 
 # ── Имена кампании/группы ─────────────────────────────────────────────────────
@@ -177,7 +186,11 @@ def run_upload(
 
     # 6. Создаём кампанию и Ad Group
     campaign_name, ad_group_name = _build_names(cfg)
-    start_time = int(datetime.now().timestamp())  # кампания PAUSED, время запуска сейчас
+    start_time = _next_midnight()
+    log.info(
+        "Время запуска: %s (ближайшая полночь)",
+        datetime.fromtimestamp(start_time).strftime("%d.%m.%Y %H:%M"),
+    )
 
     log.info("Создаём кампанию: %s", campaign_name)
     campaign_id = create_campaign(access_token, cfg, campaign_name, start_time)

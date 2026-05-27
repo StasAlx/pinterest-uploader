@@ -288,7 +288,7 @@ def _create_ad(
         "creative_type": creative_type,
         "pin_id": pin_id,
         "name": ad_name,
-        "status": "PAUSED",
+        "status": "ACTIVE",   # объявления активны; кампания PAUSED — реального показа нет
     }]
     for attempt in range(3):
         r = requests.post(
