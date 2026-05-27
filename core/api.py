@@ -62,7 +62,11 @@ def _post(access_token: str, url: str, payload: list, label: str) -> str:
 # ── Кампания ──────────────────────────────────────────────────────────────────
 
 def create_campaign(access_token: str, cfg: FunnelConfig, name: str, start_time: int) -> str:
-    """Создаёт кампанию WEB_CONVERSION с CBO бюджетом €budget_eur/день."""
+    """
+    Создаёт кампанию WEB_CONVERSION с CBO бюджетом €budget_eur/день.
+    Если cfg.is_performance_plus=True — Performance+ кампания.
+    Performance+ требует is_flexible_daily_budgets=True.
+    """
     payload = [{
         "ad_account_id": cfg.ad_account_id,
         "name": name,
@@ -70,6 +74,7 @@ def create_campaign(access_token: str, cfg: FunnelConfig, name: str, start_time:
         "objective_type": "WEB_CONVERSION",
         "daily_spend_cap": cfg.budget_eur * 1_000_000,   # микровалюта (1 EUR = 1_000_000)
         "is_flexible_daily_budgets": True,
+        "is_performance_plus": cfg.is_performance_plus,
         "start_time": start_time,
         "order_line_id": cfg.order_line_id,
     }]
@@ -89,6 +94,8 @@ def create_ad_group(access_token: str, cfg: FunnelConfig, campaign_id: str, name
     """
     Создаёт Ad Group с оптимизацией на CHECKOUT.
     targeting_spec: 'location' (не 'GEO'), 'locale' для языка.
+    Performance+: статус ACTIVE (API не разрешает PAUSED для PP ad groups).
+                  Кампания PAUSED — объявления всё равно не крутятся.
     """
     targeting_spec: dict = {
         "location": cfg.countries,
@@ -96,11 +103,15 @@ def create_ad_group(access_token: str, cfg: FunnelConfig, campaign_id: str, name
     if cfg.language:
         targeting_spec["locale"] = cfg.language
 
+    # Performance+ ad groups не могут быть PAUSED — используем ACTIVE.
+    # Кампания остаётся PAUSED, поэтому реального показа не будет.
+    ad_group_status = "ACTIVE" if cfg.is_performance_plus else "PAUSED"
+
     payload = [{
         "ad_account_id": cfg.ad_account_id,
         "campaign_id": campaign_id,
         "name": name,
-        "status": "PAUSED",
+        "status": ad_group_status,
         "billable_event": "IMPRESSION",
         "bid_strategy_type": "AUTOMATIC_BID",
         "optimization_goal_metadata": {

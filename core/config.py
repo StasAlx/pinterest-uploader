@@ -33,6 +33,7 @@ class FunnelConfig:
     # Параметры кампании
     budget_eur: int = 250        # дневной бюджет в евро (на уровне кампании)
     batch_size: int = 10         # сколько креативов заливать за один прогон
+    is_performance_plus: bool = True  # Pinterest Performance+ (рекомендуется)
 
     # Таргетинг — гео (Tier1 по умолчанию)
     countries: List[str] = field(default_factory=lambda: [
