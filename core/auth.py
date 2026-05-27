@@ -17,7 +17,7 @@ import requests
 BASE_URL = "https://api.pinterest.com/v5"
 REDIRECT_URI = "https://mentalgrowth.app/"
 TOKEN_FILE = Path(__file__).parent.parent / "pinterest_token.json"
-SCOPE = "ads:write,pins:write,pins:read"
+SCOPE = "ads:write,pins:write,pins:read,boards:read,boards:write"
 
 log = logging.getLogger(__name__)
 
